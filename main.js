@@ -1,9 +1,15 @@
 const wrapper = document.querySelector(".wrapper");
 const elInput = document.querySelector(".form-input");
+const elForm = document.querySelector(".site-form");
+const elSearch = document.querySelector(".js-search");
+const selectWeekness = document.querySelector(".js-weekness");
+const selectType = document.querySelector(".js-type");
+const selectFilter = document.querySelector(".js-filter");
 
-const renderUi = function (arr) {
+const weeknessArr = [];
+const typesArr = [];
+const renderUi = function (arr, word = "") {
   wrapper.innerHTML = "";
-
   for (let item of arr) {
     const mainDiv = document.createElement("div");
     mainDiv.setAttribute("class", "card");
@@ -12,7 +18,11 @@ const renderUi = function (arr) {
     newImg.width = 200;
     newImg.height = 200;
     const title = document.createElement("h3");
-    title.textContent = item.name;
+    if (word && word.source !== "(?:)") {
+      title.innerHTML = item.name.replace(word, `<mark>${word.source}</mark>`);
+    } else {
+      title.innerHTML = item.name;
+    }
     title.setAttribute("class", "title");
     const order = document.createElement("span");
     order.textContent = item.num;
@@ -27,58 +37,156 @@ const renderUi = function (arr) {
 
     wrapper.appendChild(mainDiv);
   }
-  console.log("work");
 };
 
 renderUi(pokemons);
+addWeeknessList();
+addTypeList();
 
-elInput.addEventListener("keyup", function (evt) {
-  const valInput = evt.target.value;
-  const newArr = pokemons.filter((item) => {
-    return item.name.toLocaleLowerCase().includes(valInput);
+function addWeeknessList() {
+  pokemons.forEach((item) => {
+    item.weaknesses.forEach((el) => {
+      if (!weeknessArr.includes(el)) {
+        weeknessArr.push(el);
+      }
+    });
   });
-  console.log(newArr);
-  renderUi(newArr);
+
+  weeknessArr.sort().forEach((item) => {
+    const newOpt = document.createElement("option");
+    newOpt.textContent = item;
+    selectWeekness.appendChild(newOpt);
+  });
+}
+
+function addTypeList() {
+  pokemons.forEach((item) => {
+    item.type.forEach((element) => {
+      if (!typesArr.includes(element)) {
+        typesArr.push(element);
+      }
+    });
+  });
+  typesArr.sort().forEach((item) => {
+    const newOpt = document.createElement("option");
+    newOpt.textContent = item;
+    selectType.appendChild(newOpt);
+  });
+}
+
+elForm.addEventListener("submit", function (evt) {
+  evt.preventDefault();
+  const searchValue = elSearch.value;
+  const regex = new RegExp(searchValue, "gi");
+  const filteredArr = pokemons.filter(function (item) {
+    return (
+      item.name.match(searchValue) &&
+      (item.weaknesses.includes(selectWeekness.value) ||
+        selectWeekness.value == "all") &&
+      (item.type.includes(selectType.value) || selectType.value == "all")
+    );
+  });
+
+  const filterVal = selectFilter.value;
+
+  if (filteredArr.length > 0) {
+    if (filterVal === "a-z") {
+      AZ(filteredArr, regex);
+    } else if (filterVal === "z-a") {
+      ZA(filteredArr, regex);
+    } else if (filterVal === "toHigherHeight") {
+      toHigherHeight(filteredArr, regex);
+    } else if (filterVal === "toLowerHeight") {
+      toLowerHeight(filteredArr, regex);
+    } else if (filterVal === "toHigherWeight") {
+      toHigherWeight(filteredArr, regex);
+    } else if (filterVal === "toLowerWeight") {
+      toLowerWeight(filteredArr, regex);
+    }
+  } else {
+    alert("There is no this pokemon");
+  }
 });
 
-// Ex 1
-// const unli = ["a", "e", "i", "u", "o"];
-// const val = prompt("So'zni kiriting");
+const AZ = function (arr, regex) {
+  arr.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1;
+    } else if (a.name < b.name) {
+      return -1;
+    } else {
+      return0;
+    }
+  });
 
-// let result = 0;
+  renderUi(arr, regex);
+};
 
-// for (let letter of val) {
-//   if (unli.includes(letter)) {
-//     result++;
-//   }
-// }
+const ZA = function (arr, regex) {
+  arr.sort((a, b) => {
+    if (a.name > b.name) {
+      return -1;
+    } else if (a.name < b.name) {
+      return 1;
+    } else {
+      return0;
+    }
+  });
 
-// console.log(result);
+  renderUi(arr, regex);
+};
 
-// Ex 2
+const toHigherHeight = function (arr, regex) {
+  arr.sort((a, b) => {
+    if (a.height > b.height) {
+      return -1;
+    } else if (a.height < b.height) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
 
-// const arr = [5, 16, 7, 4, 10, 3, 4, 4, 14, 5, 14, 4, 44, 4, 45, 4];
-// arr.forEach((item, index) => {
-//   if (item === 4) {
-//     arr.splice(index, 1);
-//   }
-// });
+  renderUi(arr, regex);
+};
 
-// console.log(arr);
+const toLowerHeight = function (arr, regex) {
+  arr.sort((a, b) => {
+    if (a.height > b.height) {
+      return 1;
+    } else if (a.height < b.height) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
 
-// Ex 3
-// const arr = [3, 5, 23, 12, 65, 87, 4, 6, 2, 4];
+  renderUi(arr, regex);
+};
+const toHigherWeight = function (arr, regex) {
+  arr.sort((a, b) => {
+    if (a.weight > b.weight) {
+      return -1;
+    } else if (a.weight < b.weight) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
 
-// if (arr[0] % 2 == 0) {
-//   arr[0] = 2;
-// } else {
-//   arr[0] = 11;
-// }
+  renderUi(arr, regex);
+};
 
-// console.log(arr);
+const toLowerWeight = function (arr, regex) {
+  arr.sort((a, b) => {
+    if (a.weight > b.weight) {
+      return 1;
+    } else if (a.weight < b.weight) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
 
-// Ex 4
-// const arr = [3, 5, 23, 12, 65, 87, 4, 6, 2, 4];
-
-// let a = arr[0] + arr[arr.length - 1];
-// console.log(a);
+  renderUi(arr, regex);
+};

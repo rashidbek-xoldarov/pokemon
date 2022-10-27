@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -14,6 +18,7 @@
     <title>First Real Project</title>
   </head>
   <body>
+    <p class="text"></p>
     <div class="container">
       <div class="img-wrapper">
         <img
@@ -25,8 +30,27 @@
       </div>
       <form class="site-form">
         <label>
-          <input class="form-input" type="text" placeholder="search..." />
+          <input
+            class="form-input js-search"
+            type="text"
+            placeholder="search..."
+          />
         </label>
+        <select class="form-select js-weekness">
+          <option value="all">All weaknesses</option>
+        </select>
+        <select class="form-select js-type">
+          <option value="all">All types</option>
+        </select>
+        <select class="form-select js-filter">
+          <option value="a-z">A-Z</option>
+          <option value="z-a">Z-A</option>
+          <option value="toHigherHeight">Higher Height</option>
+          <option value="toLowerHeight">Lower Height</option>
+          <option value="toHigherWeight">Higher Weight</option>
+          <option value="toLowerWeight">Lower Weight</option>
+        </select>
+        <button class="btn btn-success">Search</button>
       </form>
       <div class="wrapper"></div>
     </div>

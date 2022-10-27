@@ -19,10 +19,9 @@ body {
 }
 
 .site-form {
-  max-width: 300px;
-  margin-top: 15px;
-  margin-right: auto;
-  margin-left: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .form-input {
@@ -108,4 +107,14 @@ body {
   font-weight: 700;
   font-size: 24px;
   color: wheat;
+}
+
+mark {
+  padding: 0;
+}
+
+.js-weekness,
+.js-type,
+.js-filter {
+  width: 200px;
 }
