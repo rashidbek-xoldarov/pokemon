@@ -19,7 +19,10 @@ const renderUi = function (arr, word = "") {
     newImg.height = 200;
     const title = document.createElement("h3");
     if (word && word.source !== "(?:)") {
-      title.innerHTML = item.name.replace(word, `<mark>${word.source}</mark>`);
+      title.innerHTML = item.name.replaceAll(
+        word,
+        `<mark>${word.source}</mark>`
+      );
     } else {
       title.innerHTML = item.name;
     }
@@ -78,15 +81,16 @@ elForm.addEventListener("submit", function (evt) {
   evt.preventDefault();
   const searchValue = elSearch.value;
   const regex = new RegExp(searchValue, "gi");
+  console.log(regex);
   const filteredArr = pokemons.filter(function (item) {
     return (
-      item.name.match(searchValue) &&
+      item.name.toLowerCase().includes(searchValue.trim().toLowerCase()) &&
       (item.weaknesses.includes(selectWeekness.value) ||
         selectWeekness.value == "all") &&
       (item.type.includes(selectType.value) || selectType.value == "all")
     );
   });
-
+  console.log(filteredArr);
   const filterVal = selectFilter.value;
 
   if (filteredArr.length > 0) {
